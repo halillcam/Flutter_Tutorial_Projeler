@@ -68,26 +68,31 @@ class _AnaSayfaState extends State<AnaSayfa> {
             itemCount: kisilerListesi!.length,
             itemBuilder: (context,indeks){
               var kisi = kisilerListesi[indeks];
-              return Card(
-                child: Row(
-                  children: [
-                    SizedBox(height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(kisi.kisi_ad,style: TextStyle(fontSize: 20),),
-                            Text(kisi.kisi_tel)
-                          ],
+              return GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> DetaySayfa(kisi: kisi)));
+                },
+                child: Card(
+                  child: Row(
+                    children: [
+                      SizedBox(height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(kisi.kisi_ad,style: TextStyle(fontSize: 20),),
+                              Text(kisi.kisi_tel)
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(onPressed: (){
-                      
-                    }, icon: const Icon(Icons.clear,color: Colors.black54,))
-                  ],
+                      const Spacer(),
+                      IconButton(onPressed: (){
+                        
+                      }, icon: const Icon(Icons.clear,color: Colors.black54,))
+                    ],
+                  ),
                 ),
               );
             },
