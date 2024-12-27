@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rehberapp/data/entity/kisiler.dart';
+import 'package:rehberapp/ui/cubit/anasayfa_cubit.dart';
 import 'package:rehberapp/ui/views/detay_sayfa.dart';
 import 'package:rehberapp/ui/views/kayit_sayfa.dart';
 
@@ -13,23 +15,14 @@ class AnaSayfa extends StatefulWidget {
 class _AnaSayfaState extends State<AnaSayfa> {
   bool aramaYapiliyormu = false;
 
-  void ara(String aramaKelimesi){
-    print("Kisi ara = $aramaKelimesi");
+
+
+  @override
+  void initState() {
+    
+    super.initState();
+    context.read<AnasayfaCubit>().kisileriYukle();  
   }
-
- Future<List<Kisiler>> KisileriYukle() async {
-  var KisilerListesi = <Kisiler>[];
-  var k1 = Kisiler(kisi_id: 1, kisi_ad: "Ahmet", kisi_tel: "111111");
-  var k2 = Kisiler(kisi_id: 2, kisi_ad: "Halil", kisi_tel: "222222");
-  var k3 = Kisiler(kisi_id: 3, kisi_ad: "Duygu", kisi_tel: "333333");
-  
-  KisilerListesi.add(k1);
-  KisilerListesi.add(k2);
-  KisilerListesi.add(k3);
-
-  return KisilerListesi;
-
- }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +30,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
       appBar: AppBar(title: aramaYapiliyormu ? 
       TextField(decoration: const InputDecoration(hintText: "Ara"),
       onChanged: (aramaSonucu){
-        ara(aramaSonucu);
+        context.read<AnasayfaCubit>().ara(aramaSonucu);
       },
       
       ) :
@@ -49,6 +42,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
           setState(() {
             aramaYapiliyormu = false;
           });
+          context.read<AnasayfaCubit>().kisileriYukle();  
+          
         }, icon:const Icon(Icons.clear)) : 
 
         IconButton(onPressed: (){
@@ -60,17 +55,19 @@ class _AnaSayfaState extends State<AnaSayfa> {
       ],
       ),
 
-      body:FutureBuilder<List<Kisiler>>(future: KisileriYukle(),
-       builder: (context,snapshot ){
-        if(snapshot.hasData){
-          var kisilerListesi = snapshot.data;
+      body:BlocBuilder<AnasayfaCubit,List<Kisiler>>(
+       builder: (context,kisilerListesi ){
+        if(kisilerListesi.isNotEmpty){
           return ListView.builder(
-            itemCount: kisilerListesi!.length,
+            itemCount: kisilerListesi.length,
             itemBuilder: (context,indeks){
               var kisi = kisilerListesi[indeks];
               return GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> DetaySayfa(kisi: kisi)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> DetaySayfa(kisi: kisi)))
+                  .then((value){
+                    context.read<AnasayfaCubit>().kisileriYukle();  
+                  });
                 },
                 child: Card(
                   child: Row(
@@ -89,8 +86,18 @@ class _AnaSayfaState extends State<AnaSayfa> {
                       ),
                       const Spacer(),
                       IconButton(onPressed: (){
-                        
-                      }, icon: const Icon(Icons.clear,color: Colors.black54,))
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                          content:Text("${kisi.kisi_id} Silinsin mi ? "),
+                          action: SnackBarAction(label: "Evet", onPressed: (){
+                            context.read<AnasayfaCubit>().Sil(kisi.kisi_id);
+                          }), 
+                          ),
+                        );
+                      }, icon: const Icon(Icons.delete,color: Colors.red,)), 
+
+
+                
                     ],
                   ),
                 ),
@@ -107,7 +114,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
        floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>const KayitSayfa()))
         .then((value){
-          print("Anasayfaya dönüldü");
+          context.read<AnasayfaCubit>().kisileriYukle();  
         });
       }),
     );

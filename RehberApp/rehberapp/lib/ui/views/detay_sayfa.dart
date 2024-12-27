@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rehberapp/data/entity/kisiler.dart';
+import 'package:rehberapp/ui/cubit/detaysayfa_cubit.dart';
 
 class DetaySayfa extends StatefulWidget {
 
@@ -15,9 +17,7 @@ class _DetaySayfaState extends State<DetaySayfa> {
   var tfKisiAdi = TextEditingController();
   var tfKisiTel = TextEditingController();
 
-  Future<void> Guncelle(int kisi_id,String kisi_ad, String kisi_tel) async {
-    print("guncelle : $kisi_id, $kisi_ad, $kisi_tel");
-  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -40,7 +40,7 @@ class _DetaySayfaState extends State<DetaySayfa> {
             TextField(controller:tfKisiTel,decoration: const InputDecoration(hintText: "Kisi Tel"),),
 
             ElevatedButton(onPressed: (){
-              Guncelle(widget.kisi.kisi_id, tfKisiAdi.text, tfKisiTel.text);
+             context.read<DetaysayfaCubit>().Guncelle(widget.kisi.kisi_id,tfKisiAdi.text,tfKisiTel.text);
             }, child: const Text("Guncelle"))
           ],
          ),
