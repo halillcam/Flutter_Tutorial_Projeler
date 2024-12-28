@@ -9,21 +9,20 @@ class FilmlerDaoRepo {
     var f4 = Filmler(id: 4, ad: "The Hatefull Eight", resim: "thehatefuleight.png");
     var f5 = Filmler(id: 5, ad: "The Pianist", resim: "thepianist.png");
     var f6 = Filmler(id: 6, ad: "Anadoluda", resim: "anadoluda.png");
-
-    filmlerListesi.add(f1);
-    filmlerListesi.add(f2);
-    filmlerListesi.add(f3);
-    filmlerListesi.add(f4);
-    filmlerListesi.add(f5);
-    filmlerListesi.add(f6);
+    
+    filmlerListesi.addAll([f1,f2,f3,f4,f5,f6]);
+  
     return filmlerListesi;
   }
 
-  Future<List<Filmler>> ara() async{
-    var filmlerListesi = <Filmler>[];
-    var f1 = Filmler(id: 1, ad: "Django", resim: "django.png");
-    filmlerListesi.add(f1);
+ Future<List<Filmler>> ara(String aramaKelimesi) async {
+  var tumFilmler = await FilmleriYukle(); // Tüm filmleri yükle
+  var filtreliFilmler = tumFilmler.where((film) {
+    return film.ad.toLowerCase().contains(aramaKelimesi.toLowerCase()); // Film adıyla arama yap
+  }).toList();
 
-    return filmlerListesi;
-  }
+  return filtreliFilmler; // Filtrelenmiş listeyi döndür
+}
+
+  
 }

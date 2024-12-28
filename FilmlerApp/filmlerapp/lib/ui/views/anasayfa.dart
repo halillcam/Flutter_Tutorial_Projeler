@@ -28,17 +28,17 @@ class _AnasayfaState extends State<Anasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: aramaYapiliyorMu ? TextField(decoration: InputDecoration(hintText: "ara"),
+      appBar: AppBar(title: aramaYapiliyorMu ? TextField(decoration: const InputDecoration(hintText: "Search the Movie",hintStyle: TextStyle(color: Colors.white)),
       onChanged: (aramaSonucu){
         context.read<AnasayfaCubit>().ara(aramaSonucu);
       },
      
-      ) : const Text("Filmler"),
+      ) : const Text("Welcome to the Filmexplore"),
       actions: [
         aramaYapiliyorMu ? IconButton(onPressed: (){
           setState(() {
             aramaYapiliyorMu = false;
-          });
+          }); 
           context.read<AnasayfaCubit>().FilmleriYukle();
         },icon: const Icon(Icons.clear),
         
@@ -47,12 +47,14 @@ class _AnasayfaState extends State<Anasayfa> {
           setState(() {
             aramaYapiliyorMu = true;
           });
-          
+
         },icon: const Icon(Icons.search),
         )
       ],
       backgroundColor: Colors.red,
       ),
+
+      
       body: BlocBuilder<AnasayfaCubit,List<Filmler>>(
         
         builder: (context,filmlerListesi){
