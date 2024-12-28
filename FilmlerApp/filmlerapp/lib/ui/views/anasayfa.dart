@@ -12,6 +12,10 @@ class Anasayfa extends StatefulWidget {
 }
 
 class _AnasayfaState extends State<Anasayfa> {
+
+  bool aramaYapiliyorMu = false;
+
+
   @override
   void initState() {
     
@@ -24,8 +28,30 @@ class _AnasayfaState extends State<Anasayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Filmler"),
-      backgroundColor: Colors.black54,
+      appBar: AppBar(title: aramaYapiliyorMu ? TextField(decoration: InputDecoration(hintText: "ara"),
+      onChanged: (aramaSonucu){
+        context.read<AnasayfaCubit>().ara(aramaSonucu);
+      },
+     
+      ) : const Text("Filmler"),
+      actions: [
+        aramaYapiliyorMu ? IconButton(onPressed: (){
+          setState(() {
+            aramaYapiliyorMu = false;
+          });
+          context.read<AnasayfaCubit>().FilmleriYukle();
+        },icon: const Icon(Icons.clear),
+        
+        ) : 
+        IconButton(onPressed: (){
+          setState(() {
+            aramaYapiliyorMu = true;
+          });
+          
+        },icon: const Icon(Icons.search),
+        )
+      ],
+      backgroundColor: Colors.red,
       ),
       body: BlocBuilder<AnasayfaCubit,List<Filmler>>(
         
@@ -33,8 +59,8 @@ class _AnasayfaState extends State<Anasayfa> {
           if(filmlerListesi.isNotEmpty){
             
             return GridView.builder(
-            itemCount: filmlerListesi!.length,
-            gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 1 / 1.8), 
+            itemCount: filmlerListesi.length,
+            gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 2 / 1.6), 
             itemBuilder: (context,indeks){
               var film = filmlerListesi[indeks];
             
@@ -43,19 +69,12 @@ class _AnasayfaState extends State<Anasayfa> {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> Detaysayfa(film: film)));
               },
               child: Card(
-                color: Colors.grey,
+                
+              //color: Colors.black54,
                 child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.asset("images/${film.resim}"),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("${film.fiyat} TL",style: TextStyle(fontSize: 18),),
-                        ElevatedButton(onPressed: (){
-              
-                        }, child: const Text("Sepete ekle"),)
-                      ],
-                    ),
+                 
                   ],
                 ),
               ),

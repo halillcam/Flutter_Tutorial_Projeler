@@ -14,5 +14,9 @@ class AnasayfaCubit extends Cubit<List<Filmler>> {
   
   }
   
+  Future<void> ara(String aramaKelimesi) async{
+    var liste = await frepo.ara();
+    emit(liste);
+  } 
 
 }

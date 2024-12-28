@@ -20,7 +20,7 @@ class _DetaysayfaState extends State<Detaysayfa> {
         child: Column(
           children: [
             Image.asset("images/${widget.film.resim}"),
-            Text("${widget.film.fiyat} TL ",style: TextStyle(fontSize: 50),)
+          
           ],
         ),
       ),
