@@ -24,11 +24,11 @@ class KisilerdaoRepository {
  }
 
   Future <List<Kisiler>>ara(String aramaKelimesi) async{
-    var KisilerListesi = <Kisiler>[];
-  var k1 = Kisiler(kisi_id: 1, kisi_ad: "Ahmet", kisi_tel: "111111");
-  KisilerListesi.add(k1);
-
-  return KisilerListesi;
+   var KisilerListesi = await KisileriYukle(); // Mevcut kişileri getir
+  var sonucListesi = KisilerListesi.where((kisi) {
+    return kisi.kisi_ad.toLowerCase().contains(aramaKelimesi.toLowerCase());
+  }).toList(); // Arama kelimesine göre filtrele
+  return sonucListesi;
   }
 
   Future <void> Sil(int kisi_id) async {
