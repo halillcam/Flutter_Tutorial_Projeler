@@ -24,7 +24,8 @@ class KisilerdaoRepository {
  }
 
   Future <List<Kisiler>>ara(String aramaKelimesi) async{
-   var KisilerListesi = await KisileriYukle(); // Mevcut kişileri getir
+   var KisilerListesi = await KisileriYukle();
+    // Mevcut kişileri getir
   var sonucListesi = KisilerListesi.where((kisi) {
     return kisi.kisi_ad.toLowerCase().contains(aramaKelimesi.toLowerCase());
   }).toList(); // Arama kelimesine göre filtrele
